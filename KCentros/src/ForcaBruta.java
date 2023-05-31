@@ -1,4 +1,3 @@
-
 public class ForcaBruta {
     private Matriz matriz;
     private int raio = Integer.MAX_VALUE;
@@ -12,20 +11,16 @@ public class ForcaBruta {
         int escolher = matriz.getNumCentros();
         int totalElementos = matriz.getNumVertices();
         int[] combinacaoAtual = new int[escolher];
-        int raioAtual = Integer.MAX_VALUE;
-        gerarCombinacoesRecursivamente(1, totalElementos, 0, combinacaoAtual, 0, raioAtual);
+        gerarCombinacoesRecursivamente(1, totalElementos, 0, combinacaoAtual, 0);
         System.out.println(numCombinacoes);
         System.out.println(raio);
     }
 
-    private  void gerarCombinacoesRecursivamente(int inicio, int fim, int indiceAtual, int[] combinacaoAtual,
-                                                       int indiceCombinacao, int raioAtual) {
+    private void gerarCombinacoesRecursivamente(int inicio, int fim, int indiceAtual, int[] combinacaoAtual,
+                                                int indiceCombinacao) {
         if (indiceCombinacao == combinacaoAtual.length) {
+            calcularRaio(combinacaoAtual);
             numCombinacoes++;
-            raioAtual = getRaio(combinacaoAtual);
-            if(raioAtual < raio) {
-                raio = raioAtual;
-            }
             return;
         }
 
@@ -34,19 +29,25 @@ public class ForcaBruta {
         }
 
         combinacaoAtual[indiceCombinacao] = indiceAtual;
-        gerarCombinacoesRecursivamente(inicio, fim, indiceAtual + 1, combinacaoAtual, indiceCombinacao + 1, raioAtual);
-        gerarCombinacoesRecursivamente(inicio, fim, indiceAtual + 1, combinacaoAtual, indiceCombinacao, raioAtual);
+        gerarCombinacoesRecursivamente(inicio, fim, indiceAtual + 1, combinacaoAtual, indiceCombinacao + 1);
+        gerarCombinacoesRecursivamente(inicio, fim, indiceAtual + 1, combinacaoAtual, indiceCombinacao);
     }
 
-    private int getRaio(int[] combinacaoAtual) {
-        int raioAtual = -1;
-        for (int i : combinacaoAtual) {
-            for (int j = 1; j < matriz.getNumVertices(); j++) {
-                if(matriz.matrizCusto[i][j] > raioAtual) {
-                    raioAtual = matriz.matrizCusto[i][j];
-                }
+    private void calcularRaio(int[] combinacaoAtual) {
+        int raioAtual = Integer.MIN_VALUE;
+        // percorrer vertices da matriz de custo
+        for (int i = 1; i <= matriz.getNumVertices(); i++) {
+            int minDist = Integer.MAX_VALUE; 
+            // calcular a qual centro o vertice esta ligado, percorrendo os centros
+            for (int j = 0; j < combinacaoAtual.length; j++) {
+                int centro = combinacaoAtual[j];
+                // se a distancia do vertice para aquele centro for menor do que a definida previamente, atualizar
+                minDist = Math.min(minDist, matriz.matrizCusto[i][centro]); 
             }
+            // se a distancia definida entre o vertice e seu centro e maior que o raio atual (da combinacao), atualizar valor do raio atual
+            raioAtual = Math.max(raioAtual, minDist); 
         }
-        return raioAtual;
+        // se o raio da combinacao (atual) e menor do que o raio da solucao, atualizar valor da solucao
+        raio = Math.min(raio, raioAtual);
     }
 }

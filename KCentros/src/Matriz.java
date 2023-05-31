@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Matriz {
     protected int[][] matrizCusto = null;
-    private int numVertices;
+    private int numVertices; 
     private int numArestas;
     private int numCentros;
 
@@ -47,18 +47,18 @@ public class Matriz {
         try {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
+
             numVertices = scanner.nextInt();
             numArestas = scanner.nextInt();
             numCentros = scanner.nextInt();
-            System.out.println(numVertices);
 
-            matrizCusto = new int[numVertices + 1][numVertices + 1]; // Aumentando o tamanho da matriz em 1
-            for (int i = 1; i <= numVertices; i++) { // Iniciando de 1 em vez de 0
+            matrizCusto = new int[numVertices + 1][numVertices + 1];
+            for (int i = 1; i <= numVertices; i++) {
                 Arrays.fill(matrizCusto[i], Integer.MAX_VALUE);
                 matrizCusto[i][i] = 0;
             }
 
-            for (int edge = 0; edge < numArestas; edge++) {
+            for (int i = 0; i < numArestas; i++) {
                 int vertex1 = scanner.nextInt();
                 int vertex2 = scanner.nextInt();
                 int cost = scanner.nextInt();
@@ -67,22 +67,21 @@ public class Matriz {
                 matrizCusto[vertex2][vertex1] = cost;
             }
 
-            scanner.close();
-
-            // Aplicar o algoritmo de Floyd
-            for (int k = 1; k <= numVertices; k++) { // Iniciando de 1 em vez de 0
-                for (int i = 1; i <= numVertices; i++) { // Iniciando de 1 em vez de 0
-                    for (int j = 1; j <= numVertices; j++) { // Iniciando de 1 em vez de 0
+            for (int k = 1; k <= numVertices; k++) {
+                for (int i = 1; i <= numVertices; i++) {
+                    for (int j = 1; j <= numVertices; j++) {
                         if (matrizCusto[i][k] != Integer.MAX_VALUE && matrizCusto[k][j] != Integer.MAX_VALUE) {
-                            int novoCusto = matrizCusto[i][k] + matrizCusto[k][j];
-                            if (novoCusto < matrizCusto[i][j]) {
-                                matrizCusto[i][j] = novoCusto;
-                                matrizCusto[j][i] = novoCusto;
+                            int newCost = matrizCusto[i][k] + matrizCusto[k][j];
+                            if (newCost < matrizCusto[i][j]) {
+                                matrizCusto[i][j] = newCost;
+                                matrizCusto[j][i] = newCost;
                             }
                         }
                     }
                 }
             }
+
+            scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
