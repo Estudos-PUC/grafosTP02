@@ -29,24 +29,28 @@ public class Gon {
     }
 
     private void executar() {
+        // maior distancia entre um vertice e os centros selecionados
         int maxDist = Integer.MIN_VALUE;
         int novoCentro = -1;
-
+        // percorrer vertices
         for (int vertice = 1; vertice <= matriz.getNumVertices(); vertice++) {
             if (centros.contains(vertice)) {
                 continue; // Ignorar vértices já selecionados como centros
             }
-
-            int distMax = Integer.MAX_VALUE;
+            int minDist = Integer.MAX_VALUE;
+            // percorrer centros e descobrir a qual cluster o centro pertence
             for (Integer centro : centros) {
+                // distancia entre o centro e vertice em questao
                 int dist = matriz.matrizCusto[centro][vertice];
-                distMax = Math.min(distMax, dist);
+                if (dist < minDist) {
+                    minDist = dist;
+                }
             }
-
-            if (distMax > maxDist) {
-                maxDist = distMax;
+            // se a distancia entre o vertice e o centro associado a ele for maior que MaxDist -> atualizar valores 
+            if(minDist > maxDist) {
+                maxDist = minDist;
                 novoCentro = vertice;
-            }
+            } 
         }
 
         centros.add(novoCentro);
