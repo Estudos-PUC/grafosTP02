@@ -14,7 +14,7 @@ public class Gon {
         this.centros = new HashSet<>();
     }
 
-    public void GonAlgo() {
+    public int GonAlgo() {
         Random random = new Random();
         int c1 = random.nextInt(matriz.getNumVertices() - 1) + 1;
         centros.add(c1);
@@ -25,6 +25,7 @@ public class Gon {
 
         calcularRaio();
         System.out.println(raio);
+        return raio;
     }
 
     private void executar() {
